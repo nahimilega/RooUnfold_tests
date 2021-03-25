@@ -10,7 +10,7 @@
 //==============================================================================
 
 #include "RooUnfoldResponse.h"
-#include "RooUnfoldBayes.h"
+#include "RooUnfoldSvd.h"
 #include "TFile.h"
 #include "TVector.h"
 #include "unittests.h"
@@ -23,7 +23,7 @@ TVector BuildRooUnfoldSVD()
   TFile* f = new TFile("response.root","OPEN");  
   TH1D* h_meas = (TH1D*)f->Get("meas");
   RooUnfoldResponse response = BuildRooUnfoldResponse();
-  RooUnfoldSVD unfold(&response, h_meas, 20);
+  RooUnfoldSvd unfold(&response, h_meas, 20);
   TH1D* h_unfolded = (TH1D*)unfold.Hreco();
   TVector u(h_unfolded->GetNbinsX());
   for (int i=0; i<h_unfolded->GetNbinsX(); i++){
@@ -36,7 +36,7 @@ void WriteRooUnfoldSVD()
 {
   TVector u = BuildRooUnfoldSVD();
   std::ofstream ref;
-  ref.open("../ref/svd
+  ref.open("../ref/svd.ref");
   for (int i=0;i<u.GetNrows();i++){
     ref << u[i]<<std::endl;
   }
