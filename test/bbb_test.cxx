@@ -10,7 +10,7 @@
 //==============================================================================
 
 #include "RooUnfoldResponse.h"
-#include "RooUnfoldBayes.h"
+#include "RooUnfoldBinByBin.h"
 #include "TFile.h"
 #include "TVector.h"
 #include "unittests.h"
@@ -23,7 +23,7 @@ TVector BuildRooUnfoldBinByBin()
   TFile* f = new TFile("response.root","OPEN");  
   TH1D* h_meas = (TH1D*)f->Get("meas");
   RooUnfoldResponse response = BuildRooUnfoldResponse();
-  RooUnfoldBinByBin unfold(&response, h_meas, 4);
+  RooUnfoldBinByBin unfold(&response, h_meas);
   TH1D* h_unfolded = (TH1D*)unfold.Hreco();
   TVector u(h_unfolded->GetNbinsX());
   for (int i=0; i<h_unfolded->GetNbinsX(); i++){

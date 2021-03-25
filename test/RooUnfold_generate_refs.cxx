@@ -6,4 +6,8 @@ using std::endl;
 int main(){
   RooUnfoldGenerate();
   WriteRooUnfoldBayes();
+  WriteRooUnfoldSVD();
+  //WriteRooUnfoldTUnfold();
+  WriteRooUnfoldInvert();
+  WriteRooUnfoldBinByBin();
 }

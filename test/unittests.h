@@ -8,5 +8,13 @@ void RooUnfoldGenerate();
 RooUnfoldResponse BuildRooUnfoldResponse();
 TVector BuildRooUnfoldBayes();
 void WriteRooUnfoldBayes();
+TVector BuildRooUnfoldSVD();
+void WriteRooUnfoldSVD();
+TVector BuildRooUnfoldTUnfold();
+void WriteRooUnfoldTUnfold();
+TVector BuildRooUnfoldInvert();
+void WriteRooUnfoldInvert();
+TVector BuildRooUnfoldBinByBin();
+void WriteRooUnfoldBinByBin();
 
 #endif
