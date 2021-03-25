@@ -146,13 +146,30 @@ else()
 
   include(CTest)
   enable_testing()
-
+  
   foreach(ExecSource ${RooUnfoldExecSources})
     get_filename_component(ExecName ${ExecSource} NAME_WE)
     add_executable( ${ExecName} ${ExecSource} )
     target_link_libraries ( ${ExecName} RooUnfold ${ROOT_LIBRARIES} )
   endforeach()
 endif()
+
+add_executable(test_bayes
+  test/generate_test.cxx
+  test/response_test.cxx
+  test/bayes_test.cxx
+  test/RooUnfold_unit_tests.cxx)
+target_link_libraries(test_bayes PUBLIC ROOT::Matrix ROOT::Core ROOT::Hist RooUnfold)
+
+add_executable(generate_refs
+  test/generate_test.cxx
+  test/response_test.cxx
+  test/bayes_test.cxx
+  test/RooUnfold_generate_refs.cxx)
+target_link_libraries(generate_refs PUBLIC ROOT::Matrix ROOT::Core ROOT::Hist RooUnfold)
+
+add_test(Bayes test_bayes)
+
 
 file(GLOB Tests "test/*.sh")
 
@@ -164,6 +181,8 @@ foreach(TestScript ${Tests})
     COMMAND bash ${TestScript}
     )
 endforeach()
+
+
 
 # first we can indicate the documentation build as an option and set it to ON by default
 option(BUILD_DOC "Build documentation" ON)
