@@ -1,12 +1,14 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include "dbg.h"
+#include "minunit.h"
 using std::cout;
 using std::endl;
 
 #include "unittests.h"
 
-bool TestBayes(){
+int TestBayes(){
   auto u = BuildRooUnfoldBayes();
   int n = u.GetNrows();
 
@@ -19,16 +21,16 @@ bool TestBayes(){
     }
   ref.close();
   }
-  bool error = false;
 
   for (int i=0; i<n; i++){
-    if (fabs(u[i]-r[i]>5)){
-	cout<<"bin "<<i<<", difference of:"<<u[i]-r[i]<<endl;
-	error = true;
-      }
+    check(EQ(u[i], r[i], 1), "error in bayes bin: %d as %f is not %f",i,u[i],r[i]);
   }
-  return error;
+  
+  return 1;
+error:
+  return -1;
 }
+
 
 bool TestSVD(){
   auto u = BuildRooUnfoldSVD();
@@ -43,39 +45,13 @@ bool TestSVD(){
     }
   ref.close();
   }
-  bool error = false;
-
   for (int i=0; i<n; i++){
-    if (fabs(u[i]-r[i]>5)){
-	cout<<"bin "<<i<<", difference of:"<<u[i]-r[i]<<endl;
-	error = true;
-      }
+    check(EQ(u[i], r[i], 1), "error in svd bin: %d as %f is not %f",i,u[i],r[i]);
   }
-  return error;
-}
-
-bool TestTUnfold(){
-  auto u = BuildRooUnfoldTUnfold();
-  int n = u.GetNrows();
-
-  std::vector<float> r;
-  std::ifstream ref("../ref/tunfold.ref");
-  if (ref.is_open()){
-    std::string line;
-    while (getline(ref,line)){
-      r.push_back(std::stof(line));
-    }
-  ref.close();
-  }
-  bool error = false;
-
-  for (int i=0; i<n; i++){
-    if (fabs(u[i]-r[i]>5)){
-	cout<<"bin "<<i<<", difference of:"<<u[i]-r[i]<<endl;
-	error = true;
-      }
-  }
-  return error;
+  
+  return 1;
+error:
+  return -1;
 }
 
 bool TestInvert(){
@@ -91,16 +67,15 @@ bool TestInvert(){
     }
   ref.close();
   }
-  bool error = false;
-
   for (int i=0; i<n; i++){
-    if (fabs(u[i]-r[i]>5)){
-	cout<<"bin "<<i<<", difference of:"<<u[i]-r[i]<<endl;
-	error = true;
-      }
+    check(EQ(u[i], r[i], 1), "error in matrix invert bin: %d as %f is not %f",i,u[i],r[i]);
   }
-  return error;
+  
+  return 1;
+error:
+  return -1;
 }
+
 
 bool TestBinByBin(){
   auto u = BuildRooUnfoldBinByBin();
@@ -115,31 +90,30 @@ bool TestBinByBin(){
     }
   ref.close();
   }
-  bool error = false;
-
   for (int i=0; i<n; i++){
-    if (fabs(u[i]-r[i]>5)){
-	cout<<"bin "<<i<<", difference of:"<<u[i]-r[i]<<endl;
-	error = true;
-      }
+    check(EQ(u[i], r[i], 1), "error in binbybin bin: %d as %f is not %f",i,u[i],r[i]);
   }
-  return error;
+  
+  return 1;
+error:
+  return -1;
 }
 
 
+char *test_algs(){
+  mu_assert(TestBayes()==1, "binwise test of Bayes failed");
+  mu_assert(TestSVD()==1, "binwise test of SVD failed");
+  mu_assert(TestInvert()==1, "binwise test of Invert failed");
+  mu_assert(TestBinByBin()==1, "binwise test of BinByBin failed");  
+  return NULL;
+}
 
-int main(){
+char *all_tests(){
   RooUnfoldGenerate();
-  bool error_bayes = TestBayes();
-  bool error_svd = TestSVD();
-  //  bool error_tunfold = TestTUnfold();
-  bool error_invert = TestInvert();
-  bool error_bbb = TestBinByBin();
-
-  bool error = error_bayes & error_svd & error_invert & error_bbb;
-  if (error == false)
-    return 0;
-  else
-    return -1;
+  mu_suite_start();
+  mu_run_test(test_algs);
+  return NULL;
 }
+
+RUN_TESTS(all_tests);
 
