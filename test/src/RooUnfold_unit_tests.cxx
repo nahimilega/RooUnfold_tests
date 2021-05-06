@@ -161,6 +161,7 @@ char *all_tests(){
 
 char *test_bayes(){
     RooUnfoldGenerate();
+    RooUnfoldGenerateVariable();    
     mu_suite_start();
     mu_run_test(run_bayes);
     return NULL;
@@ -168,6 +169,7 @@ char *test_bayes(){
 
 char *test_svd(){
     RooUnfoldGenerate();
+    RooUnfoldGenerateVariable();        
     mu_suite_start();
     mu_run_test(run_svd);
     return NULL;
@@ -175,6 +177,7 @@ char *test_svd(){
 
 char *test_invert(){
     RooUnfoldGenerate();
+    RooUnfoldGenerateVariable();        
     mu_suite_start();
     mu_run_test(run_invert);
     return NULL;
@@ -182,6 +185,7 @@ char *test_invert(){
 
 char *test_bbb(){
     RooUnfoldGenerate();
+    RooUnfoldGenerateVariable();        
     mu_suite_start();
     mu_run_test(run_bbb);
     return NULL;
